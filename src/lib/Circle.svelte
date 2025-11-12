@@ -132,7 +132,7 @@
   role="button"
   tabindex="0"
 >
-  <span class="note-label">{note}</span>
+  <span class="note-label">{note.slice(0, -1)}</span>
 </div>
 
 <style>

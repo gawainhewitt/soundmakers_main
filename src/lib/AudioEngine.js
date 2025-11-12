@@ -24,7 +24,7 @@ export class AudioEngine {
       
       // Create master gain for volume control
       this.masterGain = this.audioContext.createGain();
-      this.masterGain.gain.value = 0.1;
+      this.masterGain.gain.value = 0.2;
       this.masterGain.connect(this.audioContext.destination);
       
       // Resume context
@@ -72,11 +72,17 @@ export class AudioEngine {
     
     // Create multiple sawtooth oscillators for richer sound
     const oscillators = [];
-    const numOscillators = 6;
+    const numOscillators = 1;
     
     // Create gain node for the note
     const noteGain = this.audioContext.createGain();
     noteGain.gain.setValueAtTime(0, now);
+    
+    // Create low-pass filter to reduce harshness
+    const filter = this.audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 500; // Cutoff frequency - adjust this to taste
+    filter.Q.value = 0; // Resonance - adjust for character
     
     // Create oscillators with slight detuning
     for (let i = 0; i < numOscillators; i++) {
@@ -90,8 +96,9 @@ export class AudioEngine {
       const oscGain = this.audioContext.createGain();
       oscGain.gain.value = 1 / numOscillators;
       
+      // Connect: oscillator -> oscGain -> filter -> noteGain
       osc.connect(oscGain);
-      oscGain.connect(noteGain);
+      oscGain.connect(filter);
       osc.start(now);
       
       // Track this oscillator globally with metadata
@@ -106,16 +113,22 @@ export class AudioEngine {
       oscillators.push(osc);
     }
     
+    // Connect filter to note gain
+    filter.connect(noteGain);
+    
     // Envelope
-    noteGain.gain.linearRampToValueAtTime(1, now + 0.001);
-    noteGain.gain.linearRampToValueAtTime(0.3, now + 0.001);
+    // Envelope with exponential attack (smoother)
+    noteGain.gain.setValueAtTime(0.001, now);  // Start from near-zero
+    noteGain.gain.exponentialRampToValueAtTime(0.5, now + 0.03);
+    noteGain.gain.exponentialRampToValueAtTime(0.3, now + 0.05);
     
     noteGain.connect(this.masterGain);
     
-    // Store in active map
+    // Store in active map (including filter for later reference if needed)
     this.activeOscillators.set(note, { 
       oscillators, 
       noteGain,
+      filter,
       startTime: now
     });
   }
@@ -128,7 +141,7 @@ export class AudioEngine {
     
     const { oscillators, noteGain } = active;
     const now = this.audioContext.currentTime;
-    const releaseTime = 1.5;
+    const releaseTime = 4;
     
     try {
       // Release envelope
