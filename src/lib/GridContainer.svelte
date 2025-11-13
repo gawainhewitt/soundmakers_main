@@ -1,12 +1,12 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import Circle from './Circle.svelte';
-  import { AudioEngine } from './AudioEngine.js';
+  
+  export let audioEngine;
+  export let audioInitialized;
   
   let circles = Array.from({ length: 9 }, (_, i) => i);
   let orientation = 'portrait';
-  let audioEngine;
-  let audioInitialized = false;
   let cleanupInterval;
   
   // C Major scale
@@ -19,8 +19,6 @@
   });
   
   onMount(() => {
-    audioEngine = new AudioEngine();
-    
     // Periodic cleanup - check for orphaned oscillators
     cleanupInterval = setInterval(() => {
       if (audioEngine) {
@@ -102,14 +100,11 @@
   }
   
   async function initAudio() {
-    if (!audioInitialized && audioEngine) {
-      await audioEngine.init();
-      audioInitialized = true;
-      
-      if (audioEngine.audioContext && audioEngine.audioContext.state === 'suspended') {
-        await audioEngine.audioContext.resume();
-        console.log('Audio context resumed:', audioEngine.audioContext.state);
-      }
+    // Audio should already be initialized from splash screen
+    // But we can resume if suspended
+    if (audioEngine && audioEngine.audioContext && audioEngine.audioContext.state === 'suspended') {
+      await audioEngine.audioContext.resume();
+      console.log('Audio context resumed:', audioEngine.audioContext.state);
     }
   }
   
