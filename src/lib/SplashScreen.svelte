@@ -12,7 +12,11 @@
   }
 </script>
 
-<div class="splash-screen" on:click={handleClick}>
+<div class="splash-screen" 
+     on:click={handleClick} 
+     on:keydown={handleClick}
+     role="button"
+     tabindex="0">
   <div class="top-logo">
     <div class="logo-wrapper">
       <img src="/images/orchlablogo.png" alt="Orch Lab Logo" style="width: 300px; max-width: 100%; height: auto;" />

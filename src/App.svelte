@@ -39,7 +39,7 @@
 
 <main>
   <ResponsiveContainer>
-    <GridContainer {audioEngine} {audioInitialized} />
+    <GridContainer {audioEngine} />
   </ResponsiveContainer>
 </main>
 

@@ -3,7 +3,6 @@
   import Circle from './Circle.svelte';
   
   export let audioEngine;
-  export let audioInitialized;
   
   let circles = Array.from({ length: 9 }, (_, i) => i);
   let orientation = 'portrait';
