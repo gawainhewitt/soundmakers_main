@@ -101,20 +101,20 @@
   }
   
   h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     margin-bottom: 2rem;
     color: #333;
   }
   
   .instructions {
-    font-size: 1.2rem;
+    font-size: 2rem;
     margin-bottom: 2rem;
     color: #555;
     line-height: 1.6;
   }
   
   .footer-note {
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #777;
     font-style: italic;
   }
@@ -144,15 +144,15 @@
     }
     
     h1 {
-      font-size: 2rem;
+      font-size: 3rem;
     }
     
     .instructions {
-      font-size: 1rem;
+      font-size: 2rem;
     }
     
     .footer-note {
-      font-size: 0.9rem;
+      font-size: 1.2rem;
     }
     
     .bottom-left,
