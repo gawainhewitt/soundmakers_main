@@ -49,4 +49,49 @@ window.addEventListener('load', function() {
   }
 });
 
+// Comprehensive fix for iOS viewport/scroll issues when returning to app
+function resetViewportAndLayout() {
+  // Force scroll to top
+  window.scrollTo(0, 0);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+  
+  // Reset zoom
+  document.body.style.zoom = 1;
+  
+  // Update CSS custom property for viewport height
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+  
+  // Force layout recalculation
+  document.body.style.display = 'none';
+  document.body.offsetHeight; // Trigger reflow
+  document.body.style.display = '';
+  
+  // Dispatch resize event to trigger orientation/layout updates
+  window.dispatchEvent(new Event('resize'));
+}
+
+// Listen for page becoming visible again (switching back to tab)
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    console.log('Page visible - resetting viewport');
+    resetViewportAndLayout();
+  }
+});
+
+// Listen for page being shown from cache (back button)
+window.addEventListener('pageshow', function(event) {
+  if (event.persisted) {
+    console.log('Page shown from cache - resetting viewport');
+    resetViewportAndLayout();
+  }
+});
+
+// Listen for window regaining focus
+window.addEventListener('focus', function() {
+  console.log('Window focused - resetting viewport');
+  resetViewportAndLayout();
+});
+
 export default app

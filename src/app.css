@@ -1,4 +1,5 @@
 :root {
+  --vh: 1vh; /* Fallback to refocus properly after inaction, will be updated by JS */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
