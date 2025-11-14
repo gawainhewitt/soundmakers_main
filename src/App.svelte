@@ -39,17 +39,26 @@
   }
 
   async function handleSplashClick() {
-    document.body.style.setProperty('background-color', '#FBAC2E', 'important');
-    // Initialize audio context on user interaction (required for iOS)
-    if (audioEngine && !audioInitialized) {
-      await audioEngine.init();
-      audioInitialized = true;
-      console.log('Audio initialized from splash screen');
-    }
-    
-    // Show play screen
-    currentScreen = 'play';
+  document.body.style.setProperty('background-color', '#FBAC2E', 'important');
+  
+  // Initialize audio context on user interaction (required for iOS)
+  if (audioEngine && !audioInitialized) {
+    await audioEngine.init();
+    audioInitialized = true;
+    console.log('Audio initialized from splash screen');
   }
+  
+  // Show play screen
+  currentScreen = 'play';
+  
+  // CHROME iOS FIX: Wait for layout to settle after transition
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    window.dispatchEvent(new Event('resize'));
+  }, 100);
+}
 
   function gracefullyStopAllNotes() {
     // Get all active notes and stop them gracefully (with release envelope)
@@ -77,6 +86,14 @@
   function handleAboutClose() {
     document.body.style.setProperty('background-color', '#FBAC2E', 'important');
     currentScreen = 'play';
+
+    // CHROME iOS FIX: Wait for layout to settle after transition
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
   }
 
   function handleOptionsSave(event) {
@@ -92,6 +109,13 @@
     
     document.body.style.setProperty('background-color', '#FBAC2E', 'important');
     currentScreen = 'play';
+    // CHROME iOS FIX: Wait for layout to settle after transition
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
   }
 </script>
 
