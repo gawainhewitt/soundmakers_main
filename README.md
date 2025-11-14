@@ -1,66 +1,201 @@
-To start the dev server:
+# Circles - Musical Touch Interface
+
+A responsive web-based musical instrument that transforms your screen into a playable 3x3 grid of circles. Each circle plays a note from a configurable musical scale, creating an intuitive and accessible way to make music through touch, mouse, or keyboard.
+
+![App Screenshot](docs/images/app-screenshot.png)
+*The main play interface with 9 interactive circles*
+
+## Features
+
+- **Multi-Scale Support**: Choose from Major, Minor, Pentatonic, Major Blues, and Minor Blues scales
+- **12 Keys**: Play in any key from C to B
+- **5 Octave Range**: Select octaves 1-5 to match your preferred pitch range
+- **Responsive Design**: Adapts seamlessly to portrait and landscape orientations
+- **Multiple Input Methods**:
+  - Touch/tap on mobile devices
+  - Mouse clicks on desktop
+  - Keyboard controls (Z, X, C, V, B, N, M, comma, period)
+- **iOS 9+ Compatible**: Extensively tested and optimized for older iOS devices
+- **Persistent Settings**: Your scale, key, and octave preferences are saved locally
+
+![Options Screen](docs/images/options-screen.png)
+*Configure your musical scale, key, and octave*
+
+## How It Works
+
+The app uses the Web Audio API to generate synthesized sounds in real-time. Each circle in the grid corresponds to a note in your selected scale, arranged from low to high (left to right, top to bottom).
+
+**Audio Engine**: Employs multiple detuned sawtooth oscillators with low-pass filtering to create a rich, warm sound. The envelope includes smooth attack and release phases for natural-sounding notes.
+
+**Scale Generation**: Dynamically generates 9 notes based on your selected key, scale type, and starting octave using chromatic intervals.
+
+## Getting Started
+
+![Splash Screen](docs/images/splash-screen.png)
+*Welcome screen - tap anywhere to begin*
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or pnpm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/gawainhewitt/soundmakers_circles.git
+cd circles
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-
-When you want to test that everything works for older iPads (with all the polyfills and legacy transforms):
-
-npm run build
-npm run serve
-
-The Difference:
-Development server (npm run dev):
-
-Live reloading, hot module replacement
-Serves source files directly
-Fast for development
-Does NOT include legacy browser transformations
-
-Production build + serve (npm run build then npm run serve):
-
-Builds optimized bundle with legacy plugin active
-Creates polyfilled versions for old browsers
-What you'd deploy to production
-What you need to test old iPad compatibility
-
-# Svelte + Vite
-
-This template should help get you started developing with Svelte in Vite.
-
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
-
-## Need an official Svelte framework?
-
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
-
-## Technical considerations
-
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+
+Visit `http://localhost:5173` in your browser.
+
+### Building for Production
+
+```bash
+# Build the app
+npm run build
+
+# Preview the production build
+npm run preview
+```
+
+The built files will be in the `dist/` directory, ready for deployment.
+
+### Testing on Mobile Devices
+
+To test the production build on physical mobile devices (especially useful for iOS testing):
+
+```bash
+# Build the app first
+npm run build
+
+# Serve the production build on your local network
+npm run serve
+```
+
+The app will be available at your local IP address (e.g., `http://192.168.1.x:3000`). You can access this URL from any device on the same network.
+
+**Note**: This is particularly important for testing iOS-specific features like audio initialization and touch handling, which behave differently in development vs production builds.
+
+## Usage
+
+1. **Launch**: Click/tap anywhere on the splash screen to begin
+2. **Play**: 
+   - Touch or click the circles to play notes
+   - Use keyboard keys (Z-X-C-V-B-N-M-,- .) for the 9 circles
+   - Press 'P' key for panic stop (stops all notes)
+3. **Configure**: 
+   - Tap the settings icon (⚙️) to change key, scale, or octave
+   - Tap the info icon (ℹ️) to view instructions again
+
+![Keyboard Layout](docs/images/keyboard-layout.png)
+*Keyboard mapping for the 9 circles*
+
+## iOS Compatibility Notes
+
+This app has been carefully optimized for iOS 9+ devices:
+
+- **Polyfills**: Core-js and regenerator-runtime ensure ES6+ features work on older browsers
+- **Audio Unlocking**: Implements iOS-specific audio context initialization
+- **Touch Handling**: Advanced touch tracking prevents stuck notes and handles multi-touch scenarios
+- **Viewport Management**: Comprehensive fixes for iOS viewport issues when switching apps
+- **Zoom Prevention**: Disables pinch-zoom and double-tap-zoom for a native app feel
+
+## Project Structure
+
+```
+├── src/
+│   ├── App.svelte              # Main app component & screen routing
+│   ├── main.js                 # Entry point with iOS fixes
+│   ├── app.css                 # Global styles
+│   └── lib/
+│       ├── AudioEngine.js      # Web Audio API sound generation
+│       ├── Circle.svelte       # Individual playable circle
+│       ├── GridContainer.svelte # 3x3 grid layout & event handling
+│       ├── OptionsScreen.svelte # Settings interface
+│       ├── ScaleGenerator.js   # Musical scale generation logic
+│       ├── SplashScreen.svelte # Welcome/instructions screen
+│       ├── IconButton.svelte   # Reusable icon button component
+│       └── ResponsiveContainer.svelte # Orientation handling
+├── public/
+│   ├── images/                 # Logos and icons
+│   └── polyfills/              # iOS 9+ compatibility scripts
+└── index.html                  # Entry HTML with polyfill loading
+```
+
+## Architecture
+
+```mermaid
+graph TD
+    A[App.svelte<br/>Screen Router & State Manager] --> B[SplashScreen.svelte<br/>Welcome & Audio Init]
+    A --> C[OptionsScreen.svelte<br/>Settings Interface]
+    A --> D[GridContainer.svelte<br/>3x3 Grid & Event Handler]
+    A --> E[IconButton.svelte<br/>Info & Settings Buttons]
+    
+    D --> G[AudioEngine.js<br/>Web Audio Synthesis]
+    D --> H[ScaleGenerator.js<br/>Musical Scale Logic]
+    D --> F[Circle.svelte ×9<br/>Interactive Note Buttons]
+
+    
+    C --> H
+    
+    F --> G
+    
+    D --> I[ResponsiveContainer.svelte<br/>Orientation Detection]
+    
+    style A fill:#06C0F0,stroke:#333,stroke-width:3px,color:#fff
+    style D fill:#FBAC2E,stroke:#333,stroke-width:2px,color:#000
+    style G fill:#AD71DD,stroke:#333,stroke-width:2px,color:#fff
+    style H fill:#AD71DD,stroke:#333,stroke-width:2px,color:#fff
+    style F fill:#90EE90,stroke:#333,stroke-width:2px,color:#000
+```
+
+*Component hierarchy and data flow*
+
+## Technologies Used
+
+- **Svelte 5**: Modern, reactive UI framework
+- **Vite**: Fast build tool and dev server
+- **Web Audio API**: Real-time audio synthesis
+- **Vite Legacy Plugin**: Automatic transpilation and polyfills for older browsers
+
+### Design Decisions
+
+**Static Site Delivery**: This app is built as a static site (vanilla Vite + Svelte) rather than using SvelteKit. This architectural choice provides:
+
+- **Maximum Compatibility**: Works seamlessly on older devices and browsers (iOS 9+)
+- **Lightweight Bundle**: Minimal JavaScript footprint for faster loading on slower devices
+- **Simple Deployment**: Can be deployed to any static hosting service without server-side requirements
+- **Reduced Complexity**: No SSR overhead or routing complexity for a single-page application
+
+This approach prioritizes accessibility and performance, ensuring the app works reliably across the widest possible range of devices and network conditions.
+
+## Troubleshooting
+
+**No sound on iOS**: Ensure silent mode is turned off. The audio context requires an initial user interaction (handled by the splash screen).
+
+**Stuck notes**: Press the 'P' key to trigger panic stop, or use the window blur detection which automatically stops all notes when switching apps.
+
+**Layout issues after app switching**: The app includes comprehensive viewport reset logic that should handle this automatically.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+See [LICENSE](LICENSE) file for details.
+
+## Credits
+
+Developed in collaboration with:
+- [**OrchLab**](https://orchlab.org/)
+- [**London Philharmonic Orchestra (LPO)**](https://lpo.org.uk/)
+- [**Drake Music**](https://www.drakemusic.org/)
+- [**Gawain Hewitt**](https://gawainhewitt.co.uk/)
